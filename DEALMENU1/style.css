@@ -1653,4 +1653,292 @@ body {
     .stats-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
+    .purchase-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.purchase-item:last-child {
+    border-bottom: none;
+}
+
+.purchase-right {
+    text-align: right;
+}
+
+.status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-bottom: 5px;
+}
+
+.status.success {
+    background: rgba(40, 167, 69, 0.15);
+    color: var(--success);
+}
+
+.status.warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: var(--warning);
+}
+
+.status.danger {
+    background: rgba(230, 57, 70, 0.15);
+    color: var(--accent);
+}
+
+.purchase-card {
+    width: 100%;
+    max-width: 700px; /* matches your other screens */
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+.empty-state {
+    text-align: center;
+    margin-top: 50px;
+    color: #6b7280;
+}
+
+.empty-state i {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #9ca3af;
+}
+
+.primary-btn {
+    margin-top: 20px;
+    background: #0a3a6a; /* your Deal Me NU blue */
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+/* Ensure the grid is identical on all main pages */
+.dashboard-layout, 
+.purchase-history-page .container { 
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Keep sidebar width consistent */
+    gap: 30px;
+    padding: 20px;
+}
+
+/* Ensure sidebars always stay in place while scrolling */
+.sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+/* Purchase History Modern Styling */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.purchase-details h4 {
+    color: var(--dark);
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.purchase-meta {
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.purchase-price {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+/* Center the box in the available space */
+.history-central-wrapper {
+    display: flex;
+    justify-content: center; /* Horizontal center */
+    align-items: flex-start; /* Start from top */
+    padding: 40px 20px;
+    width: 100%;
+}
+
+/* The actual "Box" */
+.purchase-box {
+    background: white;
+    width: 100%;
+    max-width: 700px; /* Limits width to look like a box */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 51, 102, 0.08); /* Modern soft shadow */
+    border: 1px solid rgba(0, 51, 102, 0.05);
+}
+
+.box-divider {
+    height: 1px;
+    background: #eee;
+    margin: 25px 0;
+}
+
+/* Fix the header alignment inside the box */
+.purchase-box .section-header {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.purchase-box .section-header h1 {
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+.status-completed {
+    background: #e6fffa;
+    color: #38b2ac;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.purchase-card {
+    transition: var(--transition);
+}
+
+.purchase-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary) !important;
+}
+/* --- Purchase History Styles --- */
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.history-card {
+    background: white;
+    border: 1px solid var(--light-gray);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: var(--transition);
+}
+
+.history-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-color: var(--primary);
+}
+
+.history-img-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--light-gray);
+}
+
+.history-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.history-details {
+    flex: 1;
+}
+
+.history-details h4 {
+    color: var(--dark);
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.history-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: var(--gray);
+    flex-wrap: wrap;
+}
+
+.history-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.history-right {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.history-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.status-badge.completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Mobile responsive for history card */
+@media (max-width: 576px) {
+    .history-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .history-right {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--light-gray);
+    }
+}
+#apply-filters:active {
+    transform: scale(0.98);
+}
+.checkbox-item input:checked + span {
+    color: var(--primary);
+    font-weight: 600;
+}
 }

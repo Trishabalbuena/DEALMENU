@@ -625,7 +625,52 @@
                     document.getElementById(`reject-${user.id}`)?.addEventListener('click', () => this.rejectUser(user.id));
                 });
             }
-            
+            loadPurchaseHistory() {
+                const content = `<div class="dashboard-content">
+    <div class="section-header">
+        <h2><i class="fas fa-receipt"></i> Purchase History</h2>
+        <p>View all your previous transactions</p>
+    </div>
+
+    <div class="card">
+        <div class="purchase-item">
+            <div>
+                <h4>Order #10234</h4>
+                <small>March 18, 2026 • GCash</small>
+            </div>
+            <div class="purchase-right">
+                <span class="status success">Completed</span>
+                <strong>₱499.00</strong>
+            </div>
+        </div>
+
+        <div class="purchase-item">
+            <div>
+                <h4>Order #10221</h4>
+                <small>March 10, 2026 • Cash</small>
+            </div>
+            <div class="purchase-right">
+                <span class="status warning">Pending</span>
+                <strong>₱250.00</strong>
+            </div>
+        </div>
+
+        <div class="purchase-item">
+            <div>
+                <h4>Order #10198</h4>
+                <small>February 28, 2026 • Card</small>
+            </div>
+            <div class="purchase-right">
+                <span class="status danger">Cancelled</span>
+                <strong>₱320.00</strong>
+            </div>
+        </div>
+    </div>
+</div>
+`;
+    document.getElementById("main-content").innerHTML = content;
+}
+
             renderUserCard(user) {
                 return `
                     <div class="user-card" id="user-${user.id}">

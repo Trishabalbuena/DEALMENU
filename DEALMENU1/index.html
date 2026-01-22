@@ -15,6 +15,94 @@
 
     <!-- Application Template -->
     <div id="templates" style="display: none;">
+        <!-- PURCHASE HISTORY PAGE TEMPLATE -->
+<div id="purchase-history-page">
+    <div class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand" onclick="AppManager.loadDashboard()">
+                <i class="fas fa-handshake"></i>
+                <span>Deal Me <span class="nu-text">NU</span></span>
+            </a>
+            
+            <div class="nav-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search purchases...">
+            </div>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links">
+                <a href="#" onclick="AppManager.loadDashboard()"><i class="fas fa-home"></i><span>Home</span></a>
+                <a href="#" onclick="AppManager.loadMarketplace()"><i class="fas fa-store"></i><span>Marketplace</span></a>
+                <a href="#" onclick="AppManager.loadChat()"><i class="fas fa-comments"></i><span>Messages</span></a>
+                <a href="#" onclick="AppManager.loadPostItem()"><i class="fas fa-plus-circle"></i><span>Sell</span></a>
+                <a href="#" onclick="AppManager.loadProfile()">
+                    <img src="https://ui-avatars.com/api/?name=User&background=003366&color=fff" alt="Avatar" class="nav-avatar">
+                </a>
+                <a href="#" onclick="AppManager.logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="user-card">
+                <img src="https://ui-avatars.com/api/?name=User&background=003366&color=fff" alt="User Avatar" class="user-avatar" id="sidebar-avatar-ph">
+                <h3 class="user-name" id="sidebar-name-ph">Loading...</h3>
+                <p class="user-email" id="sidebar-email-ph">loading...</p>
+                <span class="user-course" id="sidebar-course-ph">Student</span>
+                <div class="user-rating">
+                    <i class="fas fa-star"></i>
+                    <span>4.8 (User)</span>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <h4>Marketplace</h4>
+                <a href="#" onclick="AppManager.loadDashboard()"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#" onclick="AppManager.loadMarketplace()"><i class="fas fa-store"></i> Browse Items</a>
+                <a href="#" onclick="AppManager.loadWishlistPage()"><i class="fas fa-heart"></i> My Wishlist</a>
+                <a href="#" class="active"><i class="fas fa-history"></i> Purchase History</a> <!-- Active State -->
+            </div>
+            
+            <div class="menu-section">
+                <h4>My Account</h4>
+                <a href="#" onclick="AppManager.loadProfile()"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="AppManager.loadNotificationsPage()"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="#" onclick="AppManager.loadSettingsPage()"><i class="fas fa-cog"></i> Settings</a>
+            </div>
+            
+             <div class="menu-section">
+                <h4>Selling</h4>
+                <a href="#" onclick="AppManager.loadPostItem()"><i class="fas fa-plus-circle"></i> Post New Item</a>
+                <a href="#" onclick="AppManager.loadMyListings()"><i class="fas fa-box-open"></i> My Listings</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="section">
+                <div class="section-header">
+                    <h1><i class="fas fa-shopping-bag" style="color: var(--primary);"></i> Purchase History</h1>
+                    <div class="purchase-stats" style="display:flex; gap:15px;">
+                        <span style="background:var(--light); padding:5px 10px; border-radius:5px; font-size:0.9rem;">
+                            Total Spent: <strong style="color:var(--primary);" id="ph-total-spent">₱0</strong>
+                        </span>
+                    </div>
+                </div>
+                <p style="color: var(--gray); margin-bottom: 20px;">Track your past transactions within NU Fairview.</p>
+                
+                <!-- Container for the JS to inject cards -->
+                <div id="purchase-history-container" class="history-list">
+                    <!-- Loading state or items go here -->
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
         <!-- Login/Register Page -->
         <div id="auth-page">
             <div class="animated-bg">
@@ -315,11 +403,10 @@
                             <i class="fas fa-heart"></i>
                             My Wishlist
                         </a>
-                        <a href="#">
-                            <i class="fas fa-history"></i>
-                            Purchase History
+                        <a href="javascript:void(0)" onclick="AppManager.loadPurchaseHistory()">
+                            <i class="fas fa-history"></i> Purchase History
                         </a>
-                    </div>
+                        </div>
                     
                     <div class="menu-section">
                         <h4>My Account</h4>
@@ -419,255 +506,112 @@
         </div>
 
         <!-- Marketplace Page with Category Filters -->
-        <div id="marketplace-page">
-            <div class="navbar">
-                <div class="nav-container">
-                    <a href="#" class="nav-brand" onclick="AppManager.loadDashboard()">
-                        <i class="fas fa-handshake"></i>
-                        <span>Deal Me <span class="nu-text">NU</span></span>
-                    </a>
-                    
-                    <div class="nav-search">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search items..." id="marketplace-search">
-                    </div>
-                    
-                    <button class="mobile-menu-btn">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    
-                    <div class="nav-links">
-                        <a href="#" onclick="AppManager.loadDashboard()">
-                            <i class="fas fa-home"></i>
-                            <span>Home</span>
-                        </a>
-                        <a href="#" class="active" onclick="AppManager.loadMarketplace()">
-                            <i class="fas fa-store"></i>
-                            <span>Marketplace</span>
-                        </a>
-                        <a href="#" onclick="AppManager.loadChat()">
-                            <i class="fas fa-comments"></i>
-                            <span>Messages</span>
-                            <span class="badge">3</span>
-                        </a>
-                        <a href="#" onclick="AppManager.loadPostItem()">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Sell</span>
-                        </a>
-                        <a href="#" onclick="AppManager.loadProfile()">
-                            <img src="https://ui-avatars.com/api/?name=NU+Student&background=003366&color=fff" alt="Avatar" class="nav-avatar">
-                        </a>
-                        <a href="#" onclick="AppManager.logout()" id="logout-btn">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </a>
-                    </div>
-                </div>
+        <!-- Marketplace Page with Dropdown Filters -->
+<div id="marketplace-page">
+    <div class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand" onclick="AppManager.loadDashboard()">
+                <i class="fas fa-handshake"></i>
+                <span>Deal Me <span class="nu-text">NU</span></span>
+            </a>
+            
+            <div class="nav-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search items..." id="marketplace-search">
             </div>
-            <div class="dashboard-container">
-                <div class="sidebar">
-                    <div class="user-card">
-                        <img src="https://ui-avatars.com/api/?name=NU+Student&background=003366&color=fff" alt="User Avatar" class="user-avatar">
-                        <h3 class="user-name" id="sidebar-name-mp">NU Student</h3>
-                        <p class="user-email" id="sidebar-email-mp">student@nu-fairview.edu.ph</p>
-                        <span class="user-course" id="sidebar-course-mp">BS Information Technology</span>
-                        <div class="user-rating">
-                            <i class="fas fa-star"></i>
-                            <span>4.8 (25 reviews)</span>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-section">
-                        <h4>Marketplace</h4>
-                        <a href="#" onclick="AppManager.loadDashboard()">
-                            <i class="fas fa-home"></i>
-                            Dashboard
-                        </a>
-                        <a href="#" onclick="AppManager.loadMarketplace()" class="active">
-                            <i class="fas fa-store"></i>
-                            Browse Items
-                        </a>
-                        <a href="#" onclick="AppManager.loadWishlistPage()">
-                            <i class="fas fa-heart"></i>
-                            My Wishlist
-                        </a>
-                        <a href="#">
-                            <i class="fas fa-history"></i>
-                            Purchase History
-                        </a>
-                    </div>
-                    
-                    <div class="menu-section">
-                        <h4>My Account</h4>
-                        <a href="#" onclick="AppManager.loadProfile()">
-                            <i class="fas fa-user"></i>
-                            My Profile
-                        </a>
-                        <a href="#" onclick="AppManager.loadNotificationsPage()">
-                            <i class="fas fa-bell"></i>
-                            Notifications
-                        </a>
-                        <a href="#" onclick="AppManager.loadSettingsPage()">
-                            <i class="fas fa-cog"></i>
-                            Settings
-                        </a>
-                    </div>
-                    
-                    <div class="menu-section">
-                        <h4>Selling</h4>
-                        <a href="#" onclick="AppManager.loadPostItem()">
-                            <i class="fas fa-plus-circle"></i>
-                            Post New Item
-                        </a>
-                        <a href="#" onclick="AppManager.loadMyListings()">
-                            <i class="fas fa-box-open"></i>
-                            My Listings
-                        </a>
-                        <a href="#">
-                            <i class="fas fa-exchange-alt"></i>
-                            Trade Offers
-                        </a>
-                    </div>
-                </div>
-                <div class="main-content">
-                    <div class="section">
-                        <div class="section-header">
-                            <h1>Marketplace</h1>
-                            <a href="#" class="see-all" onclick="AppManager.loadPostItem()">
-                                Sell Item
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
-                        
-                       <!-- Enhanced Category Filters -->
-<div class="category-filters" style="background: white; padding: 25px; border-radius: 15px; border: 1px solid var(--light-gray); margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-    <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 1.2rem;">
-        <i class="fas fa-filter"></i> Filter Items
-    </h3>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
-        <!-- Category Filter -->
-        <div class="filter-group">
-            <label style="display: block; margin-bottom: 10px; color: var(--dark); font-weight: 500;">Categories</label>
-            <div class="checkbox-group" style="max-height: 200px; overflow-y: auto; padding: 10px; border: 1px solid var(--light-gray); border-radius: 8px; background: var(--light);">
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="all" checked>
-                    <span>All Categories</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="supplies">
-                    <span>Supplies</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="gadgets">
-                    <span>Gadgets</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="uniforms">
-                    <span>Uniforms</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="books">
-                    <span>Books</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="food">
-                    <span>Food</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="dorm">
-                    <span>Dorm</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="appliances">
-                    <span>Appliances</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="graduation">
-                    <span>Graduation</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="sports">
-                    <span>Sports</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="hobbies">
-                    <span>Hobbies</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="category-filter" value="others">
-                    <span>Others</span>
-                </label>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links">
+                <a href="#" onclick="AppManager.loadDashboard()"><i class="fas fa-home"></i><span>Home</span></a>
+                <a href="#" class="active" onclick="AppManager.loadMarketplace()"><i class="fas fa-store"></i><span>Marketplace</span></a>
+                <a href="#" onclick="AppManager.loadChat()"><i class="fas fa-comments"></i><span>Messages</span></a>
+                <a href="#" onclick="AppManager.loadPostItem()"><i class="fas fa-plus-circle"></i><span>Sell</span></a>
+                <a href="#" onclick="AppManager.loadProfile()">
+                    <img src="https://ui-avatars.com/api/?name=User&background=003366&color=fff" alt="Avatar" class="nav-avatar">
+                </a>
+                <a href="#" onclick="AppManager.logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
             </div>
         </div>
-        
-        <!-- Program Filter -->
-        <div class="filter-group">
-            <label style="display: block; margin-bottom: 10px; color: var(--dark); font-weight: 500;">For Programs</label>
-            <div class="checkbox-group" style="max-height: 200px; overflow-y: auto; padding: 10px; border: 1px solid var(--light-gray); border-radius: 8px; background: var(--light);">
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="All Programs" checked>
-                    <span>All Programs</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="Senior High School">
-                    <span>SHS</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Information Technology">
-                    <span>BS Information Technology</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Computer Science">
-                    <span>BS Computer Science</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Civil Engineering">
-                    <span>BS Civil Engineering</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Business Administration">
-                    <span>BS Business Administration</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Accountancy">
-                    <span>BS Accountancy</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Psychology">
-                    <span>BS Psychology</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Tourism Management">
-                    <span>BS Tourism Management</span>
-                </label>
-                <label class="checkbox-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer;">
-                    <input type="checkbox" class="program-filter" value="BS Hospitality Management">
-                    <span>BS Hospitality Management</span>
-                </label>
-            </div>
-        </div>
-    </div>
-    
-    <div style="display: flex; gap: 15px; margin-top: 20px;">
-        <button class="btn-primary" id="apply-filters" style="padding: 10px 25px; font-size: 0.95rem;">
-            <i class="fas fa-check"></i> Apply Filters
-        </button>
-        <button class="btn-secondary" id="clear-filters" style="padding: 10px 25px; font-size: 0.95rem; background: var(--light); color: var(--dark); border: 1px solid var(--light-gray);">
-            <i class="fas fa-times"></i> Clear Filters
-        </button>
     </div>
 
-                            <!-- Filters will be loaded dynamically -->
-                        </div>
-                        
-                        <div class="items-grid" id="marketplace-items">
-                            <!-- Marketplace items will be loaded here -->
-                        </div>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="user-card">
+                <img src="https://ui-avatars.com/api/?name=User&background=003366&color=fff" alt="User Avatar" class="user-avatar" id="sidebar-avatar-mp">
+                <h3 class="user-name" id="sidebar-name-mp">Loading...</h3>
+                <p class="user-email" id="sidebar-email-mp">...</p>
+                <span class="user-course" id="sidebar-course-mp">Student</span>
+            </div>
+            
+            <div class="menu-section">
+                <h4>Marketplace</h4>
+                <a href="#" onclick="AppManager.loadDashboard()"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#" onclick="AppManager.loadMarketplace()" class="active"><i class="fas fa-store"></i> Browse Items</a>
+                <a href="#" onclick="AppManager.loadWishlistPage()"><i class="fas fa-heart"></i> My Wishlist</a>
+                <a href="#" onclick="AppManager.loadPurchaseHistory()"><i class="fas fa-history"></i> Purchase History</a>
+            </div>
+            
+            <div class="menu-section">
+                <h4>My Account</h4>
+                <a href="#" onclick="AppManager.loadProfile()"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="AppManager.loadNotificationsPage()"><i class="fas fa-bell"></i> Notifications</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="section">
+                <div class="section-header">
+                    <h1>Marketplace</h1>
+                    <a href="#" class="see-all" onclick="AppManager.loadPostItem()">
+                        Sell Item <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                
+                <!-- DROPDOWN FILTERS (Old Format) -->
+                <div class="filter-bar" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--light-gray); margin-bottom: 25px; display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                    
+                    <!-- Category Dropdown -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9rem;">Category</label>
+                        <select id="filter-category" class="category-select">
+                            <option value="">All Categories</option>
+                            <!-- JS will populate options here -->
+                        </select>
                     </div>
+
+                    <!-- Program Dropdown -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9rem;">Program</label>
+                        <select id="filter-program" class="category-select">
+                            <option value="">All Programs</option>
+                            <!-- JS will populate options here -->
+                        </select>
+                    </div>
+
+                    <!-- Apply Button -->
+                    <button id="apply-filters-btn" class="btn-primary" style="height: 48px; padding: 0 30px; flex: 0 0 auto;">
+                        Apply Filters
+                    </button>
+                    
+                    <!-- Clear Button -->
+                    <button id="clear-filters-btn" style="height: 48px; padding: 0 20px; background: var(--light); border: 1px solid var(--light-gray); border-radius: 10px; cursor: pointer; color: var(--gray);">
+                        Clear
+                    </button>
+                </div>
+                
+                <!-- Items Grid -->
+                <div class="items-grid" id="marketplace-items">
+                    <!-- Items will appear here -->
                 </div>
             </div>
-        </div>
+        </main>
+    </div>
+</div>
 
         <!-- Wishlist Page -->
         <div id="wishlist-page">
@@ -1652,7 +1596,7 @@
                             <i class="fas fa-heart"></i>
                             My Wishlist
                         </a>
-                        <a href="#">
+                        <a href="#" onclick="AppManager.loadPurchaseHistory()">
                             <i class="fas fa-history"></i>
                             Purchase History
                         </a>

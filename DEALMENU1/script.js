@@ -150,7 +150,8 @@ class EnhancedDatabase {
                     images: [
                         "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop"
                     ],
-                    status: "available",
+                    status: "sold",
+                    buyer_id: 1,
                     category: "books",
                     subcategory: "General Education Books",
                     seller_id: 1,
@@ -855,7 +856,103 @@ static handleCourseChange(selectedCourse) {
             }
         }
     }
+    // ==================== PURCHASE HISTORY LOGIC ====================
+    
+    static loadPurchaseHistory() {
+        this.currentPage = 'purchase-history';
+        const app = document.getElementById('app');
+        
+        // 1. Get the new template
+        const template = document.getElementById('templates').querySelector('#purchase-history-page');
+        if (!template) {
+            console.error('Purchase history template not found');
+            return;
+        }
+        
+        // 2. Clone it
+        const clone = template.cloneNode(true);
+        clone.removeAttribute('id'); // Avoid ID conflict
+        app.innerHTML = '';
+        app.appendChild(clone);
 
+        // 3. Update Sidebar Info for this specific page
+        const user = this.db.getCurrentUser();
+        if (user) {
+            const sidebarName = app.querySelector('#sidebar-name-ph');
+            const sidebarEmail = app.querySelector('#sidebar-email-ph');
+            const sidebarCourse = app.querySelector('#sidebar-course-ph');
+            const sidebarAvatar = app.querySelector('#sidebar-avatar-ph');
+
+            if (sidebarName) sidebarName.textContent = user.full_name;
+            if (sidebarEmail) sidebarEmail.textContent = user.email;
+            if (sidebarCourse) sidebarCourse.textContent = user.course;
+            if (sidebarAvatar) sidebarAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=003366&color=fff`;
+
+            // 4. Render the data
+            this.renderPurchaseHistory();
+        }
+        
+        this.initMobileMenu();
+    }
+
+    static renderPurchaseHistory() {
+        const container = document.getElementById('purchase-history-container');
+        const user = this.db.getCurrentUser();
+        
+        // LOGIC: Get items where buyer_id is the current user
+        const allItems = this.db.getItems();
+        const purchases = allItems.filter(item => item.buyer_id === user.id && item.status === 'sold');
+
+        // Update Stats (Total Spent)
+        const totalSpent = purchases.reduce((sum, item) => sum + item.price, 0);
+        const spentEl = document.getElementById('ph-total-spent');
+        if (spentEl) spentEl.textContent = `₱${totalSpent.toLocaleString()}`;
+
+        // Empty State
+        if (purchases.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>You haven't bought any items yet.</p>
+                    <button class="btn-primary" style="max-width: 200px; margin: 0 auto;" onclick="AppManager.loadMarketplace()">
+                        Go Shopping
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        // Sort by date (Sold date or Created date) - Newest first
+        purchases.sort((a, b) => new Date(b.sold_at || b.created_at) - new Date(a.sold_at || a.created_at));
+
+        // Render List
+        container.innerHTML = purchases.map(item => {
+            const dateStr = item.sold_at ? new Date(item.sold_at).toLocaleDateString() : 'Recent';
+            
+            return `
+            <div class="history-card">
+                <div class="history-img-box">
+                    <img src="${item.images[0]}" alt="${item.title}">
+                </div>
+                <div class="history-details">
+                    <h4>${item.title}</h4>
+                    <div class="history-meta">
+                        <span><i class="far fa-calendar-alt"></i> Purchased: ${dateStr}</span>
+                        <span><i class="fas fa-user"></i> Seller: ${item.seller_name}</span>
+                        <span><i class="fas fa-tag"></i> ${item.category}</span>
+                    </div>
+                </div>
+                <div class="history-right">
+                    <span class="status-badge completed">Completed</span>
+                    <div class="history-price">₱${item.price.toLocaleString()}</div>
+                    <button class="btn-chat" onclick="AppManager.startChat(${item.id})" style="border:none; background:transparent; color:var(--primary); cursor:pointer; font-size:0.9rem;">
+                        <i class="fas fa-comment"></i> Chat
+                    </button>
+                </div>
+            </div>
+            `;
+        }).join('');
+    }
     // ==================== PAGE LOADING ====================
     static loadAuthPage() {
         this.currentPage = 'auth';
@@ -1390,15 +1487,153 @@ if (!nuEmailRegex.test(googleEmail)) {
             this.renderItems(items.slice(0, 2), recentContainer);
         }
     }
+    // ==================== MARKETPLACE LOGIC ====================
+
+static loadMarketplace() {
+        this.currentPage = 'marketplace';
+        const app = document.getElementById('app');
+        
+        // 1. Clone Template
+        const template = document.getElementById('templates').querySelector('#marketplace-page');
+        const clone = template.cloneNode(true);
+        clone.removeAttribute('id');
+        app.innerHTML = '';
+        app.appendChild(clone);
+        
+        // 2. Update Sidebar
+        const user = this.db.getCurrentUser();
+        if (user) this.updateUserInfoOnPage(user, 'mp');
+        
+        // 3. Populate Filter Dropdowns (The important part!)
+        this.populateFilterDropdowns();
+        
+        // 4. Initialize Mobile Menu
+        this.initMobileMenu();
+
+        // 5. Load Items
+        this.loadMarketplaceItems();
+
+        // 6. Bind Buttons
+        this.initFilterEvents();
+    }
+
+    static populateFilterDropdowns() {
+        const categories = this.db.getCategories(); // Get object of categories
+        const catSelect = document.getElementById('filter-category');
+        const progSelect = document.getElementById('filter-program');
+
+        // Populate Categories
+        if (catSelect) {
+            let catHtml = '<option value="">All Categories</option>';
+            // Sort keys alphabetically
+            const sortedKeys = Object.keys(categories).sort();
+            sortedKeys.forEach(cat => {
+                // Capitalize first letter
+                const label = cat.charAt(0).toUpperCase() + cat.slice(1);
+                catHtml += `<option value="${cat}">${label}</option>`;
+            });
+            catSelect.innerHTML = catHtml;
+        }
+
+        // Populate Programs
+        if (progSelect) {
+            // Hardcoded list from your previous code
+            const programs = [
+                'Senior High School',
+                'BS Information Technology',
+                'BS Computer Science',
+                'BS Civil Engineering',
+                'BS Business Administration',
+                'BS Accountancy',
+                'BS Psychology',
+                'BS Tourism Management',
+                'BS Hospitality Management'
+            ];
+            
+            let progHtml = '<option value="">All Programs</option>';
+            programs.forEach(prog => {
+                progHtml += `<option value="${prog}">${prog}</option>`;
+            });
+            progSelect.innerHTML = progHtml;
+        }
+    }
 
     static loadMarketplaceItems() {
         const items = this.db.getItems();
         const container = document.getElementById('marketplace-items');
-        if (container) {
-            this.renderItems(items, container);
+        this.renderItems(items, container);
+    }
+
+    static initFilterEvents() {
+        // Apply Button
+        const applyBtn = document.getElementById('apply-filters-btn');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.applyMarketplaceFilters();
+            });
+        }
+
+        // Clear Button
+        const clearBtn = document.getElementById('clear-filters-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('filter-category').value = "";
+                document.getElementById('filter-program').value = "";
+                document.getElementById('marketplace-search').value = "";
+                this.loadMarketplaceItems();
+            });
+        }
+
+        // Search Bar (Live)
+        const searchInput = document.getElementById('marketplace-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                this.applyMarketplaceFilters();
+            });
         }
     }
 
+    static applyMarketplaceFilters() {
+        let items = this.db.getItems();
+        const container = document.getElementById('marketplace-items');
+
+        // 1. Get Values
+        const searchVal = document.getElementById('marketplace-search').value.toLowerCase();
+        const catVal = document.getElementById('filter-category').value;
+        const progVal = document.getElementById('filter-program').value;
+
+        // 2. Filter by Search
+        if (searchVal) {
+            items = items.filter(item => 
+                item.title.toLowerCase().includes(searchVal) || 
+                item.description.toLowerCase().includes(searchVal)
+            );
+        }
+
+        // 3. Filter by Category
+        if (catVal && catVal !== "") {
+            items = items.filter(item => item.category === catVal);
+        }
+
+        // 4. Filter by Program
+        if (progVal && progVal !== "") {
+            items = items.filter(item => {
+                // If item has no program list, hide it (safe default)
+                if (!item.programs) return false;
+                
+                // If item is tagged with "All Programs", always show
+                if (item.programs.includes('All Programs')) return true;
+
+                // Check if item's program list includes the selected program
+                return item.programs.includes(progVal);
+            });
+        }
+
+        // 5. Render
+        this.renderItems(items, container);
+    }
     static renderItems(items, container) {
         if (!container) return;
         
@@ -2154,4 +2389,12 @@ if (!nuEmailRegex.test(googleEmail)) {
 // ==================== INITIALIZE APP ====================
 document.addEventListener('DOMContentLoaded', () => {
     AppManager.init();
+
+    function showPurchaseHistory() {
+    document.getElementById("main-content").innerHTML = `
+        <h2>Purchase History</h2>
+        <p>This is where purchases will show.</p>
+    `;
+}
+
 });
